@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, WebView } from 'react-native';
 import nodejs from 'nodejs-mobile-react-native'
 
 export default class App extends Component {
+
+  constructor(props){
+    super(props);
+    this.state={
+      web: false
+    }
+  }
 
   componentDidMount() {
     nodejs.start("main.js");
@@ -12,6 +19,7 @@ export default class App extends Component {
 
       nodejs.channel.addListener("pack", (msg) => {
         alert(msg);
+        this.setState({web:true})
     },this);
 
       nodejs.channel.addListener("api", (msg) => {
@@ -32,6 +40,12 @@ export default class App extends Component {
         <TouchableOpacity onPress={() => nodejs.channel.post('api','data')}>
           <Text>Movie</Text>
         </TouchableOpacity>
+        {this.state.web?
+        <WebView
+          source={{uri:'http://127.0.0.0010:6666'}} 
+          style={{marginTop: 20}}    
+        /> : null
+        }
       </View>
     );
   }
